@@ -1,7 +1,7 @@
 from flask import Flask
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from . import settings
+from redash import settings
 
 
 class Redash(Flask):
@@ -36,13 +36,9 @@ def create_app():
     from .metrics import request as request_metrics
     from .models import db, users
     from .utils import sentry
-    from .version_check import reset_new_version_status
 
     sentry.init()
     app = Redash()
-
-    # Check and update the cached version for use by the client
-    app.before_first_request(reset_new_version_status)
 
     security.init_app(app)
     request_metrics.init_app(app)
